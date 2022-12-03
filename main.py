@@ -12,7 +12,7 @@ def test_logger_and_exception():
           result = 3/0
           print(result)
           logging.info("Stopping the test_logger_and_exception")
-
+          
      except Exception as e:
           logging.debug(str(e))
           raise SensorException(e, sys)
@@ -32,4 +32,5 @@ if __name__ == "__main__":
 
           
      except Exception as e:
+          logging.debug(str(e))
           print(e)

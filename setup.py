@@ -5,6 +5,7 @@ from typing import List
 REQUIREMENT_FILE_NAME="requirements.txt"
 HYPHEN_E_DOT = "-e ."
 
+# get_requirements() function will provide list of library name
 def get_requirements()->List[str]:
 
     with open(REQUIREMENT_FILE_NAME) as requirement_file:
@@ -17,15 +18,11 @@ def get_requirements()->List[str]:
     return requirement_list
 
 
-
-
-
-
 setup(
     name= "sensor",
     version= "0.0.1",
     author= "ineuron",
     author_email= "atanukundu1991@gmail.com",
-    packages= find_packages(),
+    packages= find_packages(), # find_packages() will find sensor folder because in contains __init__.py
     install_requires = get_requirements()
 )

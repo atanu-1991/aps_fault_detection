@@ -27,8 +27,10 @@ class Data_Ingestion:
                 database_name = self.data_ingestion_config.database_name, 
                 collection_name = self.data_ingestion_config.collection_name)
 
+
             logging.info("Save Data in feature store")
-            #Save data in feature store
+
+            # Replac na value with np.NAN
             df.replace(to_replace="na",value=np.NAN,inplace=True)
 
             logging.info("Create feature store folder if not available")
@@ -49,11 +51,12 @@ class Data_Ingestion:
             dataset_dir = os.path.dirname(self.data_ingestion_config.train_file_path)
             os.makedirs(dataset_dir,exist_ok=True)
 
-            logging.info("Save df to feature store folder")
-            # Save df to feature store folder
+            logging.info("Save train.csv and test.csv to artifact folder")
+            # Save train.csv and test.csv to artifact folder
             df.to_csv(path_or_buf=self.data_ingestion_config.train_file_path,index=False,header=True)
             df.to_csv(path_or_buf=self.data_ingestion_config.test_file_path,index=False,header=True)
 
+            logging.info("Preparing Artifact-sensor.csv,train.csv,test.csv")
             # Prepare artifact
             data_ingestion_artifact=artifact_entity.DataIngestionArtifact(
                 feature_store_file_path = self.data_ingestion_config.feature_store_file_path,
@@ -67,6 +70,7 @@ class Data_Ingestion:
             return data_ingestion_artifact
 
         except Exception as e:
+            logging.debug(str(e))
             raise SensorException(e, sys)
 
 

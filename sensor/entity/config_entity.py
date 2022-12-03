@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from sensor.exception import SensorException
+from sensor.logger import logging
 import sys,os
 
 FILE_NAME = "sensor.csv"
@@ -13,6 +14,7 @@ class TrainingPipelineConfig:
         try:
             self.artifact_dir = os.path.join(os.getcwd(),"artifact",f"{datetime.now().strftime('%m%d%Y__%H%M%S')}")
         except Exception  as e:
+            logging.debug(str(e))
             raise SensorException(e,sys)
 
 class DataIngestionConfig:
@@ -23,12 +25,13 @@ class DataIngestionConfig:
             self.database_name = "aps"
             self.collection_name = "sensor"
             self.data_ingestion_dir = os.path.join(training_pipeline_config.artifact_dir, "data_ingestion")
-            self.feature_store_file_path = os.path.join(os.getcwd(),"feature_store",FILE_NAME)
+            self.feature_store_file_path = os.path.join(self.data_ingestion_dir,"feature_store",FILE_NAME)
             self.train_file_path = os.path.join(self.data_ingestion_dir,"dataset",TRAIN_FILE_NAME)
             self.test_file_path = os.path.join(self.data_ingestion_dir,"dataset",TEST_FILE_NAME)
             self.test_size = 0.2
 
         except Exception  as e:
+            logging.debug(str(e))
             raise SensorException(e,sys)    
 
 
@@ -36,6 +39,7 @@ class DataIngestionConfig:
         try:
             return self.__dict__
         except Exception as e:
+            logging.debug(str(e))
             raise SensorException(e,sys)
 
 
