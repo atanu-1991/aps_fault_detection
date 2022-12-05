@@ -136,7 +136,7 @@ class Data_Validation:
     def initiate_data_validation(self)->artifact_entity.DataValidationArtifact:
         try:
             
-            # Reading aps_failure_training_set1.csv file
+            # Reading aps_failure_training_set1.csv files
             logging.info(f"Reading base dataframe")
             base_df = pd.read_csv(self.data_validation_config.base_file_path)
 
