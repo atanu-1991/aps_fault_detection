@@ -3,6 +3,7 @@ from sensor.config import mongo_client
 from sensor.exception import SensorException
 from sensor.logger import logging
 import os,sys
+import yaml
 
 def get_collection_as_dataframe(database_name:str,collection_name:str)->pd.DataFrame:
     """
@@ -23,6 +24,38 @@ def get_collection_as_dataframe(database_name:str,collection_name:str)->pd.DataF
         logging.info(f"Row and Columns in df: {df.shape}")
         return df
 
+    except Exception  as e:
+        logging.debug(str(e))
+        raise SensorException(e, sys)
+
+
+def write_yaml_file(file_path,data:dict):
+    """
+    This function create yaml file and write report in yaml file
+
+    file_path: path of file
+    ==========================================================
+    this function does not return
+    """
+    try:
+        file_dir = os.path.dirname(file_path)
+
+        os.makedirs(file_dir,exist_ok=True)
+        with open(file_path,'w') as file_writer:
+            yaml.dump(data,file_writer)
+
+    except Exception  as e:
+        logging.debug(str(e))
+        raise SensorException(e, sys)
+
+
+def convert_column_float(df:pd.DataFrame,exclude_column_list:list):
+    try:
+        for column in df.columns:
+            if column not in exclude_column_list:
+                df[column] = df[column].astype("float")
+
+        return df
     except Exception  as e:
         logging.debug(str(e))
         raise SensorException(e, sys)
