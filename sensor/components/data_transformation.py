@@ -2,14 +2,13 @@ from sensor.entity import config_entity
 from sensor.entity import artifact_entity
 from sensor.exception import SensorException
 from sensor.logger import logging
-from scipy.stats import ks_2samp
 from typing import Optional
 import os,sys
 import pandas as pd 
 import numpy as np
 from sensor import utils
-from sklearn.preprocessing import Pipeline
-from sklearn.pipeline import LabelEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder
 from imblearn.combine import SMOTETomek
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import RobustScaler
@@ -64,8 +63,8 @@ class Data_Transformation:
             test_df = pd.read_csv(self.data_ingestion_artifact.test_file_path)
 
             # Selecting input feature for train and test dataframe
-            input_feature__train_df = train_df.drop(TARGET_COLUMN,axis=1,inplace=True)
-            input_feature_test_df = test_df.drop(TARGET_COLUMN,axis=1,inplace=True)
+            input_feature_train_df = train_df.drop(TARGET_COLUMN,axis=1)
+            input_feature_test_df = test_df.drop(TARGET_COLUMN,axis=1)
 
             # Selecting target feature for train and test dataframe
             target_feature_train_df = train_df[TARGET_COLUMN]
@@ -81,27 +80,27 @@ class Data_Transformation:
 
             # Simple Imputer and Robust Scaler
             transformation_pipeline = Data_Transformation.get_data_transformer_object()
-            transformation_pipeline.fit(input_feature__train_df)
+            transformation_pipeline.fit(input_feature_train_df)
 
             # transforming input feature
-            input_feature__train_arr = transformation_pipeline.transform(input_feature__train_df)
-            input_feature__test_arr = transformation_pipeline.transform(input_feature__test_df)
+            input_feature_train_arr = transformation_pipeline.transform(input_feature_train_df)
+            input_feature_test_arr = transformation_pipeline.transform(input_feature_test_df)
 
 
             smt = SMOTETomek(sampling_strategy="minority")
-            logging.info(f"Before Resampling in training set Input: {input_feature__train_arr.shape} Target: {target_feature_train_arr.shape}")
-            input_feature__train_arr, target_feature_train_arr = smt.fit_resample(input_feature__train_arr, target_feature_train_arr)
-            logging.info(f"After Resampling in training set Input: {input_feature__train_arr.shape} Target: {target_feature_train_arr.shape}")
+            logging.info(f"Before Resampling in training set Input: {input_feature_train_arr.shape} Target: {target_feature_train_arr.shape}")
+            input_feature_train_arr, target_feature_train_arr = smt.fit_resample(input_feature_train_arr, target_feature_train_arr)
+            logging.info(f"After Resampling in training set Input: {input_feature_train_arr.shape} Target: {target_feature_train_arr.shape}")
 
 
-            logging.info(f"Before Resampling in testing set Input: {input_feature__test_arr.shape} Target: {target_feature_test_arr.shape}")
-            input_feature__test_arr, target_feature_test_arr = smt.fit_resample(input_feature__test_arr, target_feature_test_arr)
-            logging.info(f"After Resampling in testing set Input: {input_feature__test_arr.shape} Target: {target_feature_test_arr.shape}")
+            logging.info(f"Before Resampling in testing set Input: {input_feature_test_arr.shape} Target: {target_feature_test_arr.shape}")
+            input_feature_test_arr, target_feature_test_arr = smt.fit_resample(input_feature_test_arr, target_feature_test_arr)
+            logging.info(f"After Resampling in testing set Input: {input_feature_test_arr.shape} Target: {target_feature_test_arr.shape}")
 
 
             # target encoder
-            train_arr = np.c_[input_feature__train_arr,target_feature_train_arr]
-            test_arr = np.c_[input_feature__test_arr,target_feature_test_arr]
+            train_arr = np.c_[input_feature_train_arr,target_feature_train_arr]
+            test_arr = np.c_[input_feature_test_arr,target_feature_test_arr]
 
             # save numpy array
             utils.sav_numpy_array_data(file_path=self.data_transformation_config.transform_train_path, array=train_arr)

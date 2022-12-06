@@ -70,8 +70,8 @@ class DataTransformationConfig:
         try:
             self.data_tranformation_dir = os.path.join(training_pipeline_config.artifact_dir, "data_transformation")
             self.transform_object_path = os.path.join(self.data_tranformation_dir,"transformer",TRANSFORMER_OBJECT_FILE_NAME)
-            self.transform_train_path = os.path.join(self.data_tranformation_dir,"transformed",TRAIN_FILE_NAME)
-            self.transform_test_path = os.path.join(self.data_tranformation_dir,"transformed",TEST_FILE_NAME)
+            self.transform_train_path = os.path.join(self.data_tranformation_dir,"transformed",TRAIN_FILE_NAME.replace("csv","npz"))
+            self.transform_test_path = os.path.join(self.data_tranformation_dir,"transformed",TEST_FILE_NAME.replace("csv","npz"))
             self.target_encoder_path = os.path.join(self.data_tranformation_dir,"target_encoder",TARGET_ENCODER_OBJECT_FILE_NAME)
 
 
@@ -80,6 +80,22 @@ class DataTransformationConfig:
             raise SensorException(e,sys)
 
 
-class ModelTrainerConfig:...
+class ModelTrainerConfig:
+
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
+
+        try:
+            self.model_trainer_dir = os.path.join(training_pipeline_config.artifact_dir, "model_trainer")
+            self.model_path = os.path.join(self.model_trainer_dir,"model",MODEL_FILE_NAME)
+            self.expected_score = 0.7
+            self.overfitting_threshold = 0.1
+
+        except Exception  as e:
+            logging.debug(str(e))
+            raise SensorException(e,sys)
+
+
+
+
 class ModelEvaluationConfig:...
 class ModelPusherConfig:...
