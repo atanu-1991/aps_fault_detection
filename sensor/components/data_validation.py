@@ -8,6 +8,7 @@ import os,sys
 import pandas as pd 
 import numpy as np
 from sensor import utils
+from sensor.config import TARGET_COLUMN
 
 
 class Data_Validation:
@@ -155,7 +156,7 @@ class Data_Validation:
             test_df = pd.read_csv(self.data_ingestion_artifact.test_file_path)
 
 
-            exclude_columnns = ["class"]
+            exclude_columnns = [TARGET_COLUMNTARGET_COLUMN]
             base_df = utils.convert_column_float(df=base_df, exclude_column_list=exclude_columnns)
             train_df = utils.convert_column_float(df=train_df, exclude_column_list=exclude_columnns)
             test_df = utils.convert_column_float(df=test_df, exclude_column_list=exclude_columnns)
