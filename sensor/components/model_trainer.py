@@ -7,6 +7,7 @@ import numpy as np
 from sensor import utils
 from xgboost import XGBClassifier
 from sklearn.metrics import f1_score
+from sklearn.model_selection import GridSearchCV
 
 
 class Model_Trainer:
@@ -38,7 +39,6 @@ class Model_Trainer:
     def train_model(self,X,y):
         """
         This function is used to train model
-
         X: Independent feature
         y: dependent feature
         =====================================
@@ -52,7 +52,7 @@ class Model_Trainer:
         except Exception as e:
             logging.debug(str(e))
             raise SensorException(e, sys)
-
+        
 
 
     def initiate_model_trainer(self)->artifact_entity.ModelTrainerArtifact:

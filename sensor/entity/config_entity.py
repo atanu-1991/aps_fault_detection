@@ -87,6 +87,11 @@ class ModelTrainerConfig:
         try:
             self.model_trainer_dir = os.path.join(training_pipeline_config.artifact_dir, "model_trainer")
             self.model_path = os.path.join(self.model_trainer_dir,"model",MODEL_FILE_NAME)
+            self.grid_param = {
+                'max_depth': [5,6,],
+                'n_estimators': [50,65],
+                'learning_rate': [0.1, 0.01]
+            }
             self.expected_score = 0.7
             self.overfitting_threshold = 0.1
 
@@ -95,7 +100,15 @@ class ModelTrainerConfig:
             raise SensorException(e,sys)
 
 
+class ModelEvaluationConfig:
+
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
+        try:
+            self.change_threshold = 0.01
+        except Exception  as e:
+            logging.debug(str(e))
+            raise SensorException(e,sys)
 
 
-class ModelEvaluationConfig:...
+
 class ModelPusherConfig:...
