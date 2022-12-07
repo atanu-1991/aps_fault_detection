@@ -26,10 +26,20 @@ class Model_Trainer:
             raise SensorException(e, sys)
 
 
-    def fine_tune(self):
+    def fine_tune(self,model,X,y):
+        """
+        This function is used to choose best parameter
+
+        model: the model on which best parameter is applicable
+        X: Independent Feature
+        y: Dependent Feature
+        """
         try:
-            # Write code for Grid Search CV
-            pass
+            grid_search = GridSearchCV(estimator=model,param_grid=self.model_trainer_config.grid_param,cv=5)
+            grid_search.fit(X,y)
+            best_param = grid_search.best_params_
+            logging.info(f"Best Parameter = {best_param}")
+            return best_param
 
         except Exception as e:
             logging.debug(str(e))
@@ -39,6 +49,7 @@ class Model_Trainer:
     def train_model(self,X,y):
         """
         This function is used to train model
+
         X: Independent feature
         y: dependent feature
         =====================================
@@ -46,6 +57,8 @@ class Model_Trainer:
         """
         try:
             xgb_classifier = XGBClassifier()
+            best_param = self.fine_tune(xgb_classifier, X=X, y=y)
+            xgb_classifier = XGBClassifier(**best_param)
             xgb_classifier.fit(X,y)
             return xgb_classifier
 
