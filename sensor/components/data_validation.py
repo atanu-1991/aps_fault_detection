@@ -25,7 +25,6 @@ class Data_Validation:
             logging.debug(str(e))
             raise SensorException(e, sys)
 
-
     
     def drop_missing_values_column(self,df,report_key_name:str)->Optional[pd.DataFrame]:
         """
@@ -88,7 +87,6 @@ class Data_Validation:
         except Exception as e:
             logging.debug(str(e))
             raise SensorException(e, sys)
-
 
 
     def data_drift(self,base_df:pd.DataFrame,current_df:pd.DataFrame,report_key_name:str):

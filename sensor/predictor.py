@@ -72,7 +72,7 @@ class ModelResolver:
             raise SensorException(e, sys)
 
 
-    def get_latest_save_dir_path(self):
+    def get_latest_save_dir_path(self)->str:
         try:
             latest_dir = self.get_latest_dir_path()
             if latest_dir == None:

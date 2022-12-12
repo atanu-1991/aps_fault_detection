@@ -81,18 +81,18 @@ def save_object(file_path:str, obj:object):
     return: none
     """
     try:
-        logging.info("Entered the save_object method of MainUtils class")
+        logging.info("Entered the save_object method of Utils")
         os.makedirs(os.path.dirname(file_path),exist_ok=True)
         with open(file_path,'wb') as file_obj:
             dill.dump(obj,file_obj)
-        logging.info("Exited the save_object method of MainUtils class")
+        logging.info("Exited the save_object method of Utils")
 
     except Exception  as e:
         logging.debug(str(e))
         raise SensorException(e, sys)
 
 
-def load_object(file_path:str,):
+def load_object(file_path:str)->object:
     """
     This function load object 
 
@@ -103,8 +103,8 @@ def load_object(file_path:str,):
     try:
         if not os.path.exists(file_path):
             raise SensorException(f"The file: {file_path} is not exsist", sys)
-        with open(file_path) as file_obj:
-            dill.load(file_obj)
+        with open(file_path,"rb") as file_obj:
+            return dill.load(file_obj)
 
     except Exception  as e:
         logging.debug(str(e))
